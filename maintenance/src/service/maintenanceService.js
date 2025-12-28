@@ -1,6 +1,7 @@
 const logger = require('../loggers/logger');
 const infoMsg = require('../constants/responseInfo');
 const axios = require('axios');
+const {sendMaintenanceData} = require('../events/publishMaintenanceVehicles');
 
 
 const getMaintenanceVehicles = async (userRole) => {
@@ -19,6 +20,8 @@ const getMaintenanceVehicles = async (userRole) => {
                 }
             })
         if (vehicles.length > 0) {
+            await sendMaintenanceData(vehicles);
+            logger.info(`SERVICE - ${infoMsg.MAINTENANCE_DATA_PUBLISH}`);
             return vehicles;
         }
         else {
